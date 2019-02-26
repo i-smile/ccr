@@ -49,33 +49,33 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import 'swiper/dist/css/swiper.min.css';
-import Swiper from 'swiper';
-import _ from 'lodash';
-import { convertToPNG } from 'canvas2image-es6';
-import Render from '@/components/Render';
-import { setTimeout } from 'timers';
+import { mapState, mapActions } from 'vuex'
+import 'swiper/dist/css/swiper.min.css'
+import Swiper from 'swiper'
+import _ from 'lodash'
+import { convertToPNG } from 'canvas2image-es6'
+import Render from '@/components/Render'
+import { setTimeout } from 'timers'
 
 export default {
-  data() {
+  data () {
     return {
       isReady: false,
       swiper: null,
       swiperInitIndex: 1
-    };
+    }
   },
   components: { Render },
-  mounted() {
-    this.swiperInitIndex = this.textureLib.length > 7 ? 3 : Math.floor(this.textureLib.length / 2);
+  mounted () {
+    this.swiperInitIndex = this.textureLib.length > 7 ? 3 : Math.floor(this.textureLib.length / 2)
     if (this.texture.name) {
-      const index = _.findIndex(this.textureLib, { name: this.texture.name });
-      this.swiperInitIndex = index;
+      const index = _.findIndex(this.textureLib, { name: this.texture.name })
+      this.swiperInitIndex = index
     } else {
-      this.setCurrentTexture(this.textureLib[this.swiperInitIndex].name);
+      this.setCurrentTexture(this.textureLib[this.swiperInitIndex].name)
     }
-    this.clearShotPics();
-    this.initSwiper();
+    this.clearShotPics()
+    this.initSwiper()
   },
   computed: {
     ...mapState({
@@ -89,20 +89,20 @@ export default {
   },
   methods: {
     ...mapActions(['setCurrentTexture', 'saveShotPic', 'clearShotPics', 'setGlazeOpacity']),
-    navBack() {
-      this.$router.go(-1);
+    navBack () {
+      this.$router.go(-1)
     },
-    navToPrintPage() {
-      this.$router.push({ path: '/print' });
+    navToPrintPage () {
+      this.$router.push({ path: '/print' })
     },
-    navToTextureLib() {
-      this.$router.push({ path: '/texture-lib' });
+    navToTextureLib () {
+      this.$router.push({ path: '/texture-lib' })
     },
-    onOpacityChange(e) {
-      const opacity = e.target.value;
-      this.setGlazeOpacity(opacity);
+    onOpacityChange (e) {
+      const opacity = e.target.value
+      this.setGlazeOpacity(opacity)
     },
-    initSwiper() {
+    initSwiper () {
       this.swiper = new Swiper('.swiper-container', {
         slidesPerView: 7,
         initialSlide: this.swiperInitIndex,
@@ -111,21 +111,21 @@ export default {
         centerInsufficientSlides: true,
         slideToClickedSlide: true,
         grabCursor: true
-      });
+      })
       this.swiper.on('slideChange', index => {
-        console.log('onchange', index);
-        this.setCurrentTexture(this.textureLib[this.swiper.activeIndex].name);
-      });
+        console.log('onchange', index)
+        this.setCurrentTexture(this.textureLib[this.swiper.activeIndex].name)
+      })
     },
-    picShot() {
-      const pic = convertToPNG('threeCanvas');
-      this.saveShotPic(pic.src);
+    picShot () {
+      const pic = convertToPNG('threeCanvas')
+      this.saveShotPic(pic.src)
       if (this.shotPics.length === 2) {
-        setTimeout(this.navToPrintPage, 150);
+        setTimeout(this.navToPrintPage, 150)
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

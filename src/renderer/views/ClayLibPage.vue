@@ -84,17 +84,17 @@
 </template>
 
 <script>
-import path from 'path';
-import { mapState, mapActions } from 'vuex';
-import draggable from 'vuedraggable';
-import { remote } from 'electron';
-import _ from 'lodash';
-import { userDir } from '@/const';
+import path from 'path'
+import { mapState, mapActions } from 'vuex'
+import draggable from 'vuedraggable'
+import { remote } from 'electron'
+import _ from 'lodash'
+import { userDir } from '@/const'
 
-const { dialog } = remote;
+const { dialog } = remote
 
 export default {
-  data() {
+  data () {
     return {
       currentAction: 'add', // add edit
       newItem: {
@@ -106,15 +106,15 @@ export default {
         info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C'
       },
       myAddModal: null
-    };
+    }
   },
-  mounted() {
+  mounted () {
     this.$nextTick(() => {
-      M.AutoInit(); // 初始化 materialize
+      M.AutoInit() // 初始化 materialize
       this.myAddModal = M.Modal.getInstance(
         document.getElementById('modalAdd')
-      );
-    });
+      )
+    })
   },
   components: {
     draggable
@@ -122,90 +122,90 @@ export default {
   computed: {
     ...mapState({}),
     clayLib: {
-      get() {
-        return this.$store.state.Material.clayLib;
+      get () {
+        return this.$store.state.Material.clayLib
       },
-      set(value) {
-        this.$store.dispatch('updateClayLib', value);
+      set (value) {
+        this.$store.dispatch('updateClayLib', value)
       }
     }
   },
   methods: {
     ...mapActions(['setCurrentClay', 'addClay', 'editClay', 'deleteClay']),
-    navBack() {
-      this.$router.go(-1);
+    navBack () {
+      this.$router.go(-1)
     },
-    navToMaterialMenu() {
-      this.$router.push({ path: '/materialmenu' });
+    navToMaterialMenu () {
+      this.$router.push({ path: '/materialmenu' })
     },
-    chooseItem(name) {
-      this.setCurrentClay(name);
-      this.navBack();
+    chooseItem (name) {
+      this.setCurrentClay(name)
+      this.navBack()
     },
-    chooseBgFile() {
+    chooseBgFile () {
       dialog.showOpenDialog(
         {
           filters: [{ extensions: ['jpg'] }]
         },
         filePaths => {
           if (filePaths && filePaths.length) {
-            const { name } = path.parse(filePaths[0]);
+            const { name } = path.parse(filePaths[0])
             if (!this.newItem.name) {
-              this.newItem.name = name;
-              document.getElementById('nameInput').focus();
+              this.newItem.name = name
+              document.getElementById('nameInput').focus()
             }
-            this.newItem.bgPath = filePaths[0];
-            this.newItem.bgUrl = 'file://' + filePaths[0];
+            this.newItem.bgPath = filePaths[0]
+            this.newItem.bgUrl = 'file://' + filePaths[0]
           }
         }
-      );
+      )
     },
-    chooseSampleFile() {
+    chooseSampleFile () {
       dialog.showOpenDialog(
         {
           filters: [{ extensions: ['jpg'] }]
         },
         filePaths => {
           if (filePaths && filePaths.length) {
-            this.newItem.samplePath = filePaths[0];
-            this.newItem.sampleUrl = 'file://' + filePaths[0];
+            this.newItem.samplePath = filePaths[0]
+            this.newItem.sampleUrl = 'file://' + filePaths[0]
           }
         }
-      );
+      )
     },
-    commit() {
+    commit () {
       if (!this.newItem.bgUrl) {
-        dialog.showErrorBox('错误提示', '请选择素材图片');
+        dialog.showErrorBox('错误提示', '请选择素材图片')
       } else if (!this.newItem.sampleUrl) {
-        dialog.showErrorBox('错误提示', '请选择试片图片');
+        dialog.showErrorBox('错误提示', '请选择试片图片')
       } else if (!this.newItem.name) {
-        dialog.showErrorBox('错误提示', '名字不能为空');
+        dialog.showErrorBox('错误提示', '名字不能为空')
       } else if (!this.newItem.info) {
-        dialog.showErrorBox('错误提示', '描述信息不能为空');
+        dialog.showErrorBox('错误提示', '描述信息不能为空')
       } else {
         const indexInLib = _.findIndex(this.clayLib, {
           name: this.newItem.name
-        });
+        })
 
         if (this.currentAction === 'add') {
           if (indexInLib !== -1) {
             dialog.showErrorBox(
               '错误提示',
               `素材库中已经有名字为${this.newItem.name}，请更换一个名字`
-            );
+            )
           } else {
-            this.addClay(this.newItem);
+            this.addClay(this.newItem)
           }
         } else {
-          this.editClay(this.newItem);
+          this.editClay(this.newItem)
         }
-        this.myAddModal.close();
+        this.myAddModal.close()
       }
     },
-    editItem({ name, info }) {
-      this.currentAction = 'edit';
-      const bgPath = path.join(userDir, `/material/clay/${name}/${name}.jpg`);
-      const samplePath = path.join(userDir, `/material/clay/${name}/00.jpg`);
+    editItem ({ name, info }) {
+      this.currentAction = 'edit'
+      const bgPath = path.join(userDir, `/material/clay/${name}/${name}.jpg`)
+      const samplePath = path.join(userDir, `/material/clay/${name}/00.jpg`)
       this.newItem = {
         bgPath,
         samplePath,
@@ -213,11 +213,11 @@ export default {
         sampleUrl: 'file://' + samplePath,
         name,
         info
-      };
-      this.myAddModal.open();
+      }
+      this.myAddModal.open()
     },
-    addItem() {
-      this.currentAction = 'add';
+    addItem () {
+      this.currentAction = 'add'
       this.newItem = {
         bgPath: '',
         samplePath: '',
@@ -225,14 +225,14 @@ export default {
         sampleUrl: '',
         name: '',
         info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C'
-      };
-      this.myAddModal.open();
+      }
+      this.myAddModal.open()
     },
-    deleteItem({ name }) {
-      this.deleteClay(name);
+    deleteItem ({ name }) {
+      this.deleteClay(name)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

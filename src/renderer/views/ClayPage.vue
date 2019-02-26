@@ -43,31 +43,31 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex';
-import 'swiper/dist/css/swiper.min.css';
-import Swiper from 'swiper';
-import _ from 'lodash';
-import Render from '@/components/Render';
+import { mapState, mapActions } from 'vuex'
+import 'swiper/dist/css/swiper.min.css'
+import Swiper from 'swiper'
+import _ from 'lodash'
+import Render from '@/components/Render'
 
 export default {
-  data() {
+  data () {
     return {
       isReady: false,
       swiper: null,
       swiperInitIndex: 1
-    };
+    }
   },
   components: { Render },
-  mounted() {
-    this.swiperInitIndex = this.clayLib.length > 7 ? 3 : Math.floor(this.clayLib.length / 2);
+  mounted () {
+    this.swiperInitIndex = this.clayLib.length > 7 ? 3 : Math.floor(this.clayLib.length / 2)
     if (this.clay.name) {
-      const index = _.findIndex(this.clayLib, { name: this.clay.name });
-      this.swiperInitIndex = index;
+      const index = _.findIndex(this.clayLib, { name: this.clay.name })
+      this.swiperInitIndex = index
     } else {
-      this.setCurrentClay(this.clayLib[this.swiperInitIndex].name);
+      this.setCurrentClay(this.clayLib[this.swiperInitIndex].name)
     }
-    console.log('mounted');
-    this.initSwiper();
+    console.log('mounted')
+    this.initSwiper()
   },
   computed: {
     ...mapState({
@@ -79,16 +79,16 @@ export default {
   },
   methods: {
     ...mapActions(['setCurrentClay']),
-    navBack() {
-      this.$router.go(-1);
+    navBack () {
+      this.$router.go(-1)
     },
-    navToMaterialMenu() {
-      this.$router.push({ path: '/materialmenu' });
+    navToMaterialMenu () {
+      this.$router.push({ path: '/materialmenu' })
     },
-    navToClayLib() {
-      this.$router.push({ path: '/clay-lib' });
+    navToClayLib () {
+      this.$router.push({ path: '/clay-lib' })
     },
-    initSwiper() {
+    initSwiper () {
       this.swiper = new Swiper('.swiper-container', {
         slidesPerView: 7,
         initialSlide: this.swiperInitIndex,
@@ -97,14 +97,14 @@ export default {
         centerInsufficientSlides: true,
         slideToClickedSlide: true,
         grabCursor: true
-      });
+      })
       this.swiper.on('slideChange', () => {
-        console.log('onChange', this.swiper.activeIndex);
-        this.setCurrentClay(this.clayLib[this.swiper.activeIndex].name);
-      });
+        console.log('onChange', this.swiper.activeIndex)
+        this.setCurrentClay(this.clayLib[this.swiper.activeIndex].name)
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

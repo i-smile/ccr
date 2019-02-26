@@ -11,31 +11,31 @@
 </template>
 
 <script>
-import { remote } from 'electron';
-import { mapActions } from 'vuex';
-const { dialog } = remote;
+import { remote } from 'electron'
+import { mapActions } from 'vuex'
+const { dialog } = remote
 
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   methods: {
     ...mapActions(['changeModelPath']),
-    chooseModelFile() {
+    chooseModelFile () {
       dialog.showOpenDialog(
         {
           filters: [{ name: 'Model', extensions: ['obj'] }]
         },
         async (filePaths) => {
           if (filePaths && filePaths.length) {
-            await this.changeModelPath('file://' + filePaths[0]);
-            this.$router.push({ path: '/scanning' });
+            await this.changeModelPath('file://' + filePaths[0])
+            this.$router.push({ path: '/scanning' })
           }
         }
-      );
+      )
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -20,15 +20,15 @@
 
 <script>
 // import { mapState } from 'vuex';
-import { remote } from 'electron';
-import { mapState } from 'vuex';
-import Render from '@/components/Render';
+import { remote } from 'electron'
+import { mapState } from 'vuex'
+import Render from '@/components/Render'
 
-const { dialog } = remote;
+const { dialog } = remote
 
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   components: { Render },
   computed: {
@@ -37,28 +37,28 @@ export default {
     })
   },
   methods: {
-    navBack() {
-      this.$router.go(-1);
+    navBack () {
+      this.$router.go(-1)
     },
-    navToClay() {
-      this.$router.push({ path: '/clay' });
+    navToClay () {
+      this.$router.push({ path: '/clay' })
     },
-    navToTexture() {
+    navToTexture () {
       if (this.clay.name) {
-        this.$router.push({ path: '/texture' });
+        this.$router.push({ path: '/texture' })
       } else {
-        dialog.showErrorBox('错误提示', '请先选择泥料');
+        dialog.showErrorBox('错误提示', '请先选择泥料')
       }
     },
-    navToGlaze() {
+    navToGlaze () {
       if (this.clay.name) {
-        this.$router.push({ path: '/glaze' });
+        this.$router.push({ path: '/glaze' })
       } else {
-        dialog.showErrorBox('错误提示', '请先选择泥料');
+        dialog.showErrorBox('错误提示', '请先选择泥料')
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

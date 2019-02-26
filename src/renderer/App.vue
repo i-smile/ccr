@@ -5,17 +5,17 @@
 </template>
 
 <script>
-import fs from 'fs-extra';
-import path from 'path';
-import { mapState, mapActions } from 'vuex';
-import 'materialize-css';
-import 'materialize-css/dist/css/materialize.css';
-import { userDir, version } from '@/const';
+import fs from 'fs-extra'
+import path from 'path'
+import { mapState, mapActions } from 'vuex'
+import 'materialize-css'
+import 'materialize-css/dist/css/materialize.css'
+import { userDir, version } from '@/const'
 
 export default {
   name: 'ceramics-fitting-room',
-  data() {
-    return {};
+  data () {
+    return {}
   },
   computed: {
     ...mapState({
@@ -36,78 +36,78 @@ export default {
       'clearTextureLib'
     ]),
     // 初始化素材库
-    initMaterialLib() {
-      let needUpdate = false;
-      const materialSrcPath = path.join(__static, '/material');
-      const materialDistPath = path.join(userDir, '/material'); // 个人用户目录下的APP数据
+    initMaterialLib () {
+      let needUpdate = false
+      const materialSrcPath = path.join(__static, '/material')
+      const materialDistPath = path.join(userDir, '/material') // 个人用户目录下的APP数据
 
       if (localStorage.getItem('version') !== version) {
-        fs.removeSync(materialDistPath);
-        needUpdate = true;
-        this.clearClayLib();
-        this.clearGlazeLib();
-        this.clearTextureLib();
+        fs.removeSync(materialDistPath)
+        needUpdate = true
+        this.clearClayLib()
+        this.clearGlazeLib()
+        this.clearTextureLib()
       }
 
-      localStorage.setItem('version', version);
+      localStorage.setItem('version', version)
 
       // const isTexturesExist = fs.existsSync(materialDistPath);
 
       // 判断是否是第一次运行，是的话就把static下的素材复制过去，并构建素材库
       if (this.appLaunchCount === 0 || needUpdate) {
-        fs.copySync(materialSrcPath, materialDistPath);
+        fs.copySync(materialSrcPath, materialDistPath)
 
-        fs.chmodSync(materialDistPath, 0o777);
-        fs.chmodSync(path.join(materialDistPath, '/clay'), 0o777);
-        fs.chmodSync(path.join(materialDistPath, '/glaze'), 0o777);
-        fs.chmodSync(path.join(materialDistPath, '/texture'), 0o777);
+        fs.chmodSync(materialDistPath, 0o777)
+        fs.chmodSync(path.join(materialDistPath, '/clay'), 0o777)
+        fs.chmodSync(path.join(materialDistPath, '/glaze'), 0o777)
+        fs.chmodSync(path.join(materialDistPath, '/texture'), 0o777)
 
-        const clayFiles = fs.readdirSync(path.join(materialDistPath, '/clay'));
-        const glazeFiles = fs.readdirSync(path.join(materialDistPath, '/glaze'));
-        const textureFiles = fs.readdirSync(path.join(materialDistPath, '/texture'));
+        const clayFiles = fs.readdirSync(path.join(materialDistPath, '/clay'))
+        const glazeFiles = fs.readdirSync(path.join(materialDistPath, '/glaze'))
+        const textureFiles = fs.readdirSync(path.join(materialDistPath, '/texture'))
 
         clayFiles.forEach((item, index) => {
-          const itemPath = path.join(materialDistPath, '/clay/' + item);
-          fs.chmodSync(itemPath, 0o777);
+          const itemPath = path.join(materialDistPath, '/clay/' + item)
+          fs.chmodSync(itemPath, 0o777)
           if (!path.parse(itemPath).name.startsWith('.')) {
             this.addClay({
               needCopyFile: false,
               bgPath: itemPath + '.jpg'
-            });
+            })
           }
-        });
+        })
         glazeFiles.forEach((item, index) => {
-          const itemPath = path.join(materialDistPath, '/glaze/' + item);
-          fs.chmodSync(itemPath, 0o777);
+          const itemPath = path.join(materialDistPath, '/glaze/' + item)
+          fs.chmodSync(itemPath, 0o777)
           if (!path.parse(itemPath).name.startsWith('.')) {
             this.addGlaze({
               needCopyFile: false,
               bgPath: itemPath + '.jpg'
-            });
+            })
           }
-        });
+        })
         textureFiles.forEach((item, index) => {
-          const itemPath = path.join(materialDistPath, '/texture/' + item);
-          fs.chmodSync(itemPath, 0o777);
+          const itemPath = path.join(materialDistPath, '/texture/' + item)
+          fs.chmodSync(itemPath, 0o777)
           if (!path.parse(itemPath).name.startsWith('.')) {
             this.addTexture({
               needCopyFile: false,
               bgPath: itemPath + '.jpg'
-            });
+            })
           }
-        });
+        })
       }
     }
   },
-  mounted() {
-    this.setCurrentClay();
-    this.setCurrentTexture();
-    this.setCurrentGlaze();
-    this.initMaterialLib();
-    this.incrementAppLaunchCount();
-    console.log('appLaunchCount: ', this.appLaunchCount);
+  mounted () {
+    this.setCurrentClay()
+    this.setCurrentTexture()
+    this.setCurrentGlaze()
+    this.initMaterialLib()
+    this.incrementAppLaunchCount()
+    console.log('appLaunchCount: ', this.appLaunchCount)
   }
-};
+}
 </script>
 
 <style>

@@ -22,23 +22,23 @@
 </template>
 
 <script>
-import fs from 'fs';
+import fs from 'fs'
 // import path from 'path';
 // import { mapState } from 'vuex';
-import { ipcRenderer } from 'electron';
-import { mapState, mapActions } from 'vuex';
-import Render from '@/components/Render';
-import { setTimeout } from 'timers';
-import { userDir } from '@/const';
-import bgImgUrl from '@/assets/print-bg.jpg';
+import { ipcRenderer } from 'electron'
+import { mapState, mapActions } from 'vuex'
+import Render from '@/components/Render'
+import { setTimeout } from 'timers'
+import { userDir } from '@/const'
+import bgImgUrl from '@/assets/print-bg.jpg'
 
 export default {
-  data() {
+  data () {
     return {
       canvasWidth: 1000,
       canvasHeight: 1500,
       canvasList: []
-    };
+    }
   },
   components: { Render },
   computed: {
@@ -46,58 +46,58 @@ export default {
       shotPics: state => state.Main.shotPics
     })
   },
-  mounted() {
+  mounted () {
     this.canvasList = document.getElementsByTagName('canvas');
 
     [0, 1, 2].forEach(index => {
-      const canvas = this.canvasList[index];
-      const ctx = canvas.getContext('2d');
+      const canvas = this.canvasList[index]
+      const ctx = canvas.getContext('2d')
 
-      const bgImg = new Image();
-      const threeImg = new Image();
-      bgImg.src = bgImgUrl;
-      threeImg.src = this.shotPics[index];
+      const bgImg = new Image()
+      const threeImg = new Image()
+      bgImg.src = bgImgUrl
+      threeImg.src = this.shotPics[index]
 
       setTimeout(() => {
-        ctx.fillStyle = 'rgba(192, 80, 77, 0.7)';
-        ctx.drawImage(bgImg, 0, 0, this.canvasWidth, this.canvasHeight);
+        ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
+        ctx.drawImage(bgImg, 0, 0, this.canvasWidth, this.canvasHeight)
         // ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-        ctx.drawImage(threeImg, 160, 320, this.canvasWidth - 336, this.canvasHeight - 510);
-        ctx.fillStyle = '#a37150';
-        ctx.font = '50px Arial';
-        ctx.rotate(90 * Math.PI / 180);
+        ctx.drawImage(threeImg, 160, 320, this.canvasWidth - 336, this.canvasHeight - 510)
+        ctx.fillStyle = '#a37150'
+        ctx.font = '50px Arial'
+        ctx.rotate(90 * Math.PI / 180)
         // ctx.fillText(dateText, 480, -890);
-      }, 1000);
-    });
+      }, 1000)
+    })
   },
   methods: {
     ...mapActions(['clearShotPics', 'setCurrentClay', 'setCurrentGlaze', 'setCurrentTexture']),
-    navBack() {
-      this.$router.go(-1);
+    navBack () {
+      this.$router.go(-1)
     },
-    navToMaterialMenu() {
-      this.$router.push({ path: 'materialmenu' });
+    navToMaterialMenu () {
+      this.$router.push({ path: 'materialmenu' })
     },
-    navToStartPage() {
-      this.setCurrentClay();
-      this.setCurrentGlaze();
-      this.setCurrentTexture();
-      this.clearShotPics();
-      this.$router.push({ path: '/' });
+    navToStartPage () {
+      this.setCurrentClay()
+      this.setCurrentGlaze()
+      this.setCurrentTexture()
+      this.clearShotPics()
+      this.$router.push({ path: '/' })
     },
-    print(index) {
-      let imgData = this.canvasList[index].toDataURL('image/png');
-      const base64Data = imgData.replace(/^data:image\/\w+;base64,/, '');
-      const dataBuffer = Buffer.from(base64Data, 'base64');
-      fs.writeFile(`${userDir}/printPicture${index + 1}.png`, dataBuffer, function(err) {
-        if (err) return;
-        console.log('图片保存成功');
+    print (index) {
+      let imgData = this.canvasList[index].toDataURL('image/png')
+      const base64Data = imgData.replace(/^data:image\/\w+;base64,/, '')
+      const dataBuffer = Buffer.from(base64Data, 'base64')
+      fs.writeFile(`${userDir}/printPicture${index + 1}.png`, dataBuffer, function (err) {
+        if (err) return
+        console.log('图片保存成功')
         // ipcRenderer.send('print-silent', `file://${userDir}/printPicture${index + 1}.png`);
-        ipcRenderer.send('print-preview', `file://${userDir}/printPicture${index + 1}.png`);
-      });
+        ipcRenderer.send('print-preview', `file://${userDir}/printPicture${index + 1}.png`)
+      })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

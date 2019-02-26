@@ -1,4 +1,4 @@
-'use strict';
+'use strict'
 
 import {
   app,
@@ -6,9 +6,9 @@ import {
   globalShortcut,
   Menu,
   ipcMain
-} from 'electron';
+} from 'electron'
 /* eslint no-unused-vars: 0 */
-import store from '../renderer/store';
+import store from '../renderer/store'
 
 /**
  * Set `__static` path to static files in production
@@ -17,16 +17,16 @@ import store from '../renderer/store';
 if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path')
     .join(__dirname, '/static')
-    .replace(/\\/g, '\\\\');
+    .replace(/\\/g, '\\\\')
 }
 
-let mainWindow;
-let winprintp;
-let winprints;
+let mainWindow
+let winprintp
+let winprints
 const winURL =
-  process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`;
+  process.env.NODE_ENV === 'development' ? `http://localhost:9080` : `file://${__dirname}/index.html`
 
-function createWindow() {
+function createWindow () {
   /**
    * Initial window options
    */
@@ -39,64 +39,64 @@ function createWindow() {
     webPreferences: {
       webSecurity: false
     }
-  });
+  })
 
-  mainWindow.loadURL(winURL);
+  mainWindow.loadURL(winURL)
 
-  Menu.setApplicationMenu(null);
+  Menu.setApplicationMenu(null)
 
   globalShortcut.register('f12', (event, arg) => {
     if (mainWindow != null) {
-      mainWindow.openDevTools();
+      mainWindow.openDevTools()
     }
-  });
+  })
 
-  const contents = mainWindow.webContents;
-  const printers = contents.getPrinters();
-  console.log(printers);
+  const contents = mainWindow.webContents
+  const printers = contents.getPrinters()
+  console.log(printers)
 
   mainWindow.on('closed', () => {
-    mainWindow = null;
-  });
+    mainWindow = null
+  })
 }
 
 ipcMain.on('print-preview', (event, arg) => {
-  console.log('mmm:', arg);
-  winprintp = new BrowserWindow({ width: 600, height: 900 });
-  winprintp.loadFile(`${__static}/print-html/print-preview.html`);
-  winprintp.setMenu(null);
+  console.log('mmm:', arg)
+  winprintp = new BrowserWindow({ width: 600, height: 900 })
+  winprintp.loadFile(`${__static}/print-html/print-preview.html`)
+  winprintp.setMenu(null)
   winprintp.webContents.on('did-finish-load', () => {
-    console.log('nnn:', arg);
-    winprintp.webContents.send('request', arg);
-  });
-});
+    console.log('nnn:', arg)
+    winprintp.webContents.send('request', arg)
+  })
+})
 ipcMain.on('print-silent', (event, arg) => {
-  console.log('jjjj:', arg);
-  winprints = new BrowserWindow({ show: false });
-  winprints.loadFile(`${__static}/print-html/print-silent.html`);
+  console.log('jjjj:', arg)
+  winprints = new BrowserWindow({ show: false })
+  winprints.loadFile(`${__static}/print-html/print-silent.html`)
   winprints.webContents.on('did-finish-load', () => {
-    console.log('kkkk:', arg);
-    winprints.webContents.send('request', arg);
-  });
-});
+    console.log('kkkk:', arg)
+    winprints.webContents.send('request', arg)
+  })
+})
 ipcMain.on('print', (event, arg) => {
-  console.log('do print');
-  winprints.webContents.print({ silent: true, printBackground: true });
-});
+  console.log('do print')
+  winprints.webContents.print({ silent: true, printBackground: true })
+})
 
-app.on('ready', createWindow);
+app.on('ready', createWindow)
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
-    app.quit();
+    app.quit()
   }
-});
+})
 
 app.on('activate', () => {
   if (mainWindow === null) {
-    createWindow();
+    createWindow()
   }
-});
+})
 
 /**
  * Auto Updater

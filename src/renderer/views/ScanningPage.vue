@@ -17,12 +17,12 @@
 
 <script>
 // import { mapState } from 'vuex';
-import { mapState } from 'vuex';
-import Render from '@/components/Render';
+import { mapState } from 'vuex'
+import Render from '@/components/Render'
 
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
   components: { Render },
   computed: {
@@ -31,11 +31,11 @@ export default {
     })
   },
   methods: {
-    navToMaterialMenu() {
-      this.$router.push({ path: 'materialmenu' });
+    navToMaterialMenu () {
+      this.$router.push({ path: 'materialmenu' })
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
