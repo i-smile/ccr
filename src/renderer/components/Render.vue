@@ -152,7 +152,7 @@ export default {
       const pointLight = new THREE.PointLight(0xffffff, 0.8)
       this.camera.add(pointLight)
       this.scene.add(this.camera)
-      this.scene.add(new THREE.CameraHelper(this.camera))
+      // this.scene.add(new THREE.CameraHelper(this.camera))
 
       // CONTROLS
       const cameraControls = new OrbitControls(
