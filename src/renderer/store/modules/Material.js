@@ -31,7 +31,7 @@ const state = {
 const mutations = {
   // 模型文件路径
   setModelPath (state, path) {
-    state.modelPath = path
+    state.modelPath = path || ''
   },
   // 釉料透明度
   setGlazeOpacity (state, value) {

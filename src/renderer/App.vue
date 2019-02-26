@@ -30,6 +30,7 @@ export default {
       'addTexture',
       'setCurrentClay',
       'setCurrentGlaze',
+      'setModelPath',
       'setCurrentTexture',
       'clearClayLib',
       'clearGlazeLib',
@@ -99,13 +100,25 @@ export default {
       }
     }
   },
-  mounted () {
+  created () {
+    // 清空
     this.setCurrentClay()
     this.setCurrentTexture()
     this.setCurrentGlaze()
+    this.setModelPath()
+  },
+  mounted () {
     this.initMaterialLib()
     this.incrementAppLaunchCount()
     console.log('appLaunchCount: ', this.appLaunchCount)
+  },
+  beforeDestroy () {
+    console.log('beforeDestroybeforeDestroybeforeDestroybeforeDestroy')
+    // 清空
+    this.setCurrentClay()
+    this.setCurrentTexture()
+    this.setCurrentGlaze()
+    this.setModelPath()
   }
 }
 </script>

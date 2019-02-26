@@ -105,7 +105,7 @@ export default {
       this.render()
     },
 
-    async init () {
+    init () {
       // renderer
       this.renderer = new THREE.WebGLRenderer({
         canvas: document.getElementById('threeCanvas'),
@@ -122,9 +122,17 @@ export default {
         45,
         renderDom.offsetWidth / renderDom.offsetHeight,
         1,
-        2000
+        Math.max(
+          this.box3.max.x - this.box3.min.x,
+          this.box3.max.y - this.box3.min.y,
+          this.box3.max.z - this.box3.min.z
+        ) * 15
       )
-      this.camera.position.z = 250
+      // this.camera.position.z = 1000
+      console.log(this.box3)
+      const z = Math.max(this.box3.max.x - this.box3.min.x, this.box3.max.y - this.box3.min.y) * 1.5
+      this.camera.position.z = z
+      console.log(z)
 
       this.reflectionCube = new THREE.CubeTextureLoader()
         .setPath('file://' + __static + '/envreflect/Park3Med/')
@@ -144,6 +152,7 @@ export default {
       const pointLight = new THREE.PointLight(0xffffff, 0.8)
       this.camera.add(pointLight)
       this.scene.add(this.camera)
+      this.scene.add(new THREE.CameraHelper(this.camera))
 
       // CONTROLS
       const cameraControls = new OrbitControls(
@@ -260,7 +269,10 @@ export default {
           this.objGroup.add(mesh)
         }
       })
-      this.objGroup.position.y = 0 - this.box3.getCenter().y
+      const center = this.box3.getCenter()
+      this.objGroup.position.x = 0 - center.x
+      this.objGroup.position.y = 0 - center.y
+      this.objGroup.position.z = 0 - center.z
       this.scene.add(this.objGroup)
     },
 
@@ -269,11 +281,13 @@ export default {
       // manager
       const manager = new THREE.LoadingManager()
 
+      const modelPath = this.modelPath
+
       function onLoadModelProgress (xhr) {
         if (xhr.lengthComputable) {
           var percentComplete = (xhr.loaded / xhr.total) * 100
           console.log(
-            'model ' + Math.round(percentComplete, 2) + '% downloaded'
+            'model ' + '(' + modelPath + ')' + Math.round(percentComplete, 2) + '% downloaded'
           )
         }
       }
