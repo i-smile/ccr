@@ -27,7 +27,6 @@
     "fs-extra": "^7.0.1",
     "lodash": "^4.17.11",
     "materialize-css": "^1.0.0-rc.2",
-    "nedb": "^1.8.0",
     "swiper": "^4.4.6",
     "three": "^0.100.0",
     "three-dlc": "^0.100.0-alpha-2",

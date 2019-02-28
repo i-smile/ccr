@@ -5,11 +5,11 @@ import App from './App'
 import router from './router'
 import store from './store'
 
-import db from './datastore'
+// import db from './datastore'
 
 import '@/filters.js'
 
-Vue.prototype.$db = db
+// Vue.prototype.$db = db
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
 Vue.http = Vue.prototype.$http = axios
