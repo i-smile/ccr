@@ -113,7 +113,7 @@ export default {
         preserveDrawingBuffer: true // 要生成图片以供保存，必须加这个
       })
       const renderDom = document.getElementById('render')
-      console.log(renderDom.offsetWidth, renderDom.offsetHeight)
+      // console.log(renderDom.offsetWidth, renderDom.offsetHeight)
       this.renderer.setPixelRatio(4)
       this.renderer.setSize(renderDom.offsetWidth, renderDom.offsetHeight)
 
@@ -129,10 +129,10 @@ export default {
         ) * 15
       )
       // this.camera.position.z = 1000
-      console.log(this.box3)
+      // console.log(this.box3)
       const z = Math.max(this.box3.max.x - this.box3.min.x, this.box3.max.y - this.box3.min.y) * 1.5
       this.camera.position.z = z
-      console.log(z)
+      // console.log(z)
 
       this.reflectionCube = new THREE.CubeTextureLoader()
         .setPath('file://' + __static + '/envreflect/Park3Med/')
@@ -250,10 +250,10 @@ export default {
 
       let mergedMaterials = []
       if (!this.material1 && !this.material2) {
-        console.log('ddddddd')
+        // console.log('ddddddd')
         mergedMaterials = [this.material0]
       } else {
-        console.log('cccccccc')
+        // console.log('cccccccc')
         mergedMaterials = _.compact([
           this.material1,
           this.material3,
@@ -261,7 +261,7 @@ export default {
         ])
       }
 
-      console.log('mergedMaterials.length: ', mergedMaterials.length)
+      // console.log('mergedMaterials.length: ', mergedMaterials.length)
 
       this.object.traverse(child => {
         if (child.isMesh) {
@@ -298,7 +298,7 @@ export default {
           this.modelPath,
           obj => {
             this.object = obj
-            console.log(this.object)
+            // console.log(this.object)
             const box3 = new THREE.Box3()
             box3.expandByObject(this.object)
             this.box3 = box3

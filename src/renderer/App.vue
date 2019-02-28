@@ -102,6 +102,7 @@ export default {
   },
   created () {
     // 清空
+    console.log('(created)')
     this.setCurrentClay()
     this.setCurrentTexture()
     this.setCurrentGlaze()
@@ -110,10 +111,10 @@ export default {
   mounted () {
     this.initMaterialLib()
     this.incrementAppLaunchCount()
-    console.log('appLaunchCount: ', this.appLaunchCount)
+    console.log('(mounted)appLaunchCount: ', this.appLaunchCount)
   },
   beforeDestroy () {
-    console.log('beforeDestroybeforeDestroybeforeDestroybeforeDestroy')
+    console.log('beforeDestroy')
     // 清空
     this.setCurrentClay()
     this.setCurrentTexture()
