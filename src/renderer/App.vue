@@ -30,11 +30,11 @@ export default {
       'addTexture',
       'setCurrentClay',
       'setCurrentGlaze',
-      'setModelPath',
       'setCurrentTexture',
-      'clearClayLib',
-      'clearGlazeLib',
-      'clearTextureLib',
+      'setModelPath',
+      // 'clearClayLib',
+      // 'clearGlazeLib',
+      // 'clearTextureLib',
       'clearShotPics'
     ]),
     // 初始化素材库
@@ -46,9 +46,9 @@ export default {
       if (localStorage.getItem('version') !== version) {
         // fs.removeSync(materialDistPath)
         needUpdate = true
-        this.clearClayLib()
-        this.clearGlazeLib()
-        this.clearTextureLib()
+        // this.clearClayLib()
+        // this.clearGlazeLib()
+        // this.clearTextureLib()
       }
 
       localStorage.setItem('version', version)
@@ -59,10 +59,12 @@ export default {
       if (this.appLaunchCount === 0 || needUpdate) {
         fs.copySync(materialSrcPath, materialDistPath)
 
-        fs.chmodSync(materialDistPath, 0o777)
-        fs.chmodSync(path.join(materialDistPath, '/clay'), 0o777)
-        fs.chmodSync(path.join(materialDistPath, '/glaze'), 0o777)
-        fs.chmodSync(path.join(materialDistPath, '/texture'), 0o777)
+        if (process.platform === 'darwin') {
+          fs.chmodSync(materialDistPath, 0o777)
+          fs.chmodSync(path.join(materialDistPath, '/clay'), 0o777)
+          fs.chmodSync(path.join(materialDistPath, '/glaze'), 0o777)
+          fs.chmodSync(path.join(materialDistPath, '/texture'), 0o777)
+        }
 
         const clayFiles = fs.readdirSync(path.join(materialDistPath, '/clay'))
         const glazeFiles = fs.readdirSync(path.join(materialDistPath, '/glaze'))
@@ -70,7 +72,9 @@ export default {
 
         clayFiles.forEach((item, index) => {
           const itemPath = path.join(materialDistPath, '/clay/' + item)
-          fs.chmodSync(itemPath, 0o777)
+          if (process.platform === 'darwin') {
+            fs.chmodSync(itemPath, 0o777)
+          }
           if (!path.parse(itemPath).name.startsWith('.')) {
             this.addClay({
               needCopyFile: false,
@@ -80,7 +84,9 @@ export default {
         })
         glazeFiles.forEach((item, index) => {
           const itemPath = path.join(materialDistPath, '/glaze/' + item)
-          fs.chmodSync(itemPath, 0o777)
+          if (process.platform === 'darwin') {
+            fs.chmodSync(itemPath, 0o777)
+          }
           if (!path.parse(itemPath).name.startsWith('.')) {
             this.addGlaze({
               needCopyFile: false,
@@ -90,7 +96,9 @@ export default {
         })
         textureFiles.forEach((item, index) => {
           const itemPath = path.join(materialDistPath, '/texture/' + item)
-          fs.chmodSync(itemPath, 0o777)
+          if (process.platform === 'darwin') {
+            fs.chmodSync(itemPath, 0o777)
+          }
           if (!path.parse(itemPath).name.startsWith('.')) {
             this.addTexture({
               needCopyFile: false,

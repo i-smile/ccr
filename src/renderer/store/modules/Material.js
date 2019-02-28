@@ -197,6 +197,11 @@ const actions = {
       name = fileName
     };
 
+    const indexInLib = _.findIndex(state.clayLib, (n) => n.name === name)
+    if (indexInLib > -1) {
+      return
+    }
+
     const distDir = path.join(
       app.getPath('userData'),
       '/material/clay/' + name
@@ -279,6 +284,11 @@ const actions = {
       name = fileName
     };
 
+    const indexInLib = _.findIndex(state.glazeLib, (n) => n.name === name)
+    if (indexInLib > -1) {
+      return
+    }
+
     const distDir = path.join(
       app.getPath('userData'),
       '/material/glaze/' + name
@@ -359,6 +369,11 @@ const actions = {
     if (!name) {
       name = fileName
     };
+
+    const indexInLib = _.findIndex(state.textureLib, (n) => n.name === name)
+    if (indexInLib > -1) {
+      return
+    }
 
     const distDir = path.join(
       app.getPath('userData'),
