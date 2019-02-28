@@ -79,9 +79,9 @@ export default {
       this.$router.push({ path: 'materialmenu' })
     },
     navToStartPage () {
-      this.setCurrentClay()
-      this.setCurrentGlaze()
-      this.setCurrentTexture()
+      // this.setCurrentClay()
+      // this.setCurrentGlaze()
+      // this.setCurrentTexture()
       this.clearShotPics()
       this.$router.push({ path: '/' })
     },

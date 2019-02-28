@@ -34,7 +34,8 @@ export default {
       'setCurrentTexture',
       'clearClayLib',
       'clearGlazeLib',
-      'clearTextureLib'
+      'clearTextureLib',
+      'clearShotPics'
     ]),
     // 初始化素材库
     initMaterialLib () {
@@ -43,7 +44,7 @@ export default {
       const materialDistPath = path.join(userDir, '/material') // 个人用户目录下的APP数据
 
       if (localStorage.getItem('version') !== version) {
-        fs.removeSync(materialDistPath)
+        // fs.removeSync(materialDistPath)
         needUpdate = true
         this.clearClayLib()
         this.clearGlazeLib()
@@ -103,10 +104,10 @@ export default {
   created () {
     // 清空
     console.log('(created)')
-    this.setCurrentClay()
-    this.setCurrentTexture()
-    this.setCurrentGlaze()
-    this.setModelPath()
+    // this.setCurrentClay()
+    // this.setCurrentTexture()
+    // this.setCurrentGlaze()
+    // this.setModelPath()
   },
   mounted () {
     this.initMaterialLib()
@@ -120,6 +121,7 @@ export default {
     this.setCurrentTexture()
     this.setCurrentGlaze()
     this.setModelPath()
+    this.clearShotPics()
   }
 }
 </script>

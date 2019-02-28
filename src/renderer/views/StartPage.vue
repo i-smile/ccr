@@ -19,8 +19,17 @@ export default {
   data () {
     return {}
   },
+  created () {
+    // 清空
+    console.log('(startPage created)')
+    this.setCurrentClay()
+    this.setCurrentTexture()
+    this.setCurrentGlaze()
+    this.setModelPath()
+    this.clearShotPics()
+  },
   methods: {
-    ...mapActions(['changeModelPath']),
+    ...mapActions(['setModelPath', 'setCurrentClay', 'setCurrentTexture', 'setCurrentGlaze', 'clearShotPics']),
     chooseModelFile () {
       dialog.showOpenDialog(
         {
@@ -28,7 +37,7 @@ export default {
         },
         async (filePaths) => {
           if (filePaths && filePaths.length) {
-            await this.changeModelPath('file://' + filePaths[0])
+            await this.setModelPath('file://' + filePaths[0])
             this.$router.push({ path: '/scanning' })
           }
         }

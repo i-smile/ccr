@@ -156,7 +156,7 @@ const mutations = {
 ===================== actions ====================
 ================================================ */
 const actions = {
-  changeModelPath ({
+  setModelPath ({
     commit
   }, data) {
     commit('setModelPath', data)
