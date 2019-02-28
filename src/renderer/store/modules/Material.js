@@ -10,15 +10,18 @@ const state = {
   glazeOpacity: 75,
   clay: {
     name: '',
-    info: ''
+    info: '',
+    formula: ''
   },
   glaze: {
     name: '',
-    info: ''
+    info: '',
+    formula: ''
   },
   texture: {
     name: '',
-    info: ''
+    info: '',
+    formula: ''
   },
   clayLib: [],
   glazeLib: [],
@@ -40,17 +43,19 @@ const mutations = {
   // 增加泥料
   addClay (state, {
     name,
-    info
+    info,
+    formula
   }) {
     state.clayLib.push({
       name,
-      info
+      info,
+      formula
     })
   },
   // 编辑
-  editClay (state, { name, info }) {
+  editClay (state, { name, info, formula }) {
     const indexInLib = _.findIndex(state.clayLib, (n) => n.name === name)
-    state.clayLib.splice(indexInLib, 1, { name, info })
+    state.clayLib.splice(indexInLib, 1, { name, info, formula })
   },
   // 删除泥料
   deleteClay (state, name) {
@@ -61,7 +66,8 @@ const mutations = {
     if (!name) {
       state.clay = {
         name: '',
-        info: ''
+        info: '',
+        formula: ''
       }
     } else {
       state.clay = _.find(state.clayLib, { name })
@@ -78,17 +84,19 @@ const mutations = {
   // 增加釉料
   addGlaze (state, {
     name,
-    info
+    info,
+    formula
   }) {
     state.glazeLib.push({
       name,
-      info
+      info,
+      formula
     })
   },
   // 编辑
-  editGlaze (state, { name, info }) {
+  editGlaze (state, { name, info, formula }) {
     const indexInLib = _.findIndex(state.glazeLib, (n) => n.name === name)
-    state.glazeLib.splice(indexInLib, 1, { name, info })
+    state.glazeLib.splice(indexInLib, 1, { name, info, formula })
   },
   // 删除釉料
   deleteGlaze (state, name) {
@@ -99,7 +107,8 @@ const mutations = {
     if (!name) {
       state.glaze = {
         name: '',
-        info: ''
+        info: '',
+        formula: ''
       }
     } else {
       state.glaze = _.find(state.glazeLib, { name })
@@ -116,17 +125,19 @@ const mutations = {
   // 增加纹理
   addTexture (state, {
     name,
-    info
+    info,
+    formula
   }) {
     state.textureLib.push({
       name,
-      info
+      info,
+      formula
     })
   },
   // 编辑
-  editTexture (state, { name, info }) {
+  editTexture (state, { name, info, formula }) {
     const indexInLib = _.findIndex(state.textureLib, (n) => n.name === name)
-    state.textureLib.splice(indexInLib, 1, { name, info })
+    state.textureLib.splice(indexInLib, 1, { name, info, formula })
   },
   // 删除纹理
   deleteTexture (state, name) {
@@ -137,7 +148,8 @@ const mutations = {
     if (!name) {
       state.texture = {
         name: '',
-        info: ''
+        info: '',
+        formula: ''
       }
     } else {
       state.texture = _.find(state.textureLib, { name })
@@ -175,7 +187,8 @@ const actions = {
     bgPath,
     samplePath,
     name = '',
-    info = 'Porcelain, Oxidation Firng, Cone 6, 1220°C'
+    info = 'Porcelain, Oxidation Firng, Cone 6, 1220°C',
+    formula = ''
   }) {
     const {
       name: fileName
@@ -198,7 +211,8 @@ const actions = {
 
     commit('addClay', {
       name,
-      info
+      info,
+      formula
     })
   },
   // 编辑
@@ -255,7 +269,8 @@ const actions = {
     bgPath,
     samplePath,
     name = '',
-    info = 'Porcelain, Oxidation Firng, Cone 6, 1220°C'
+    info = 'Porcelain, Oxidation Firng, Cone 6, 1220°C',
+    formula = ''
   }) {
     const {
       name: fileName
@@ -278,7 +293,8 @@ const actions = {
 
     commit('addGlaze', {
       name,
-      info
+      info,
+      formula
     })
   },
   // 编辑
@@ -334,7 +350,8 @@ const actions = {
     bgPath,
     samplePath,
     name = '',
-    info = 'Porcelain, Oxidation Firng, Cone 6, 1220°C'
+    info = 'Porcelain, Oxidation Firng, Cone 6, 1220°C',
+    formula = ''
   }) {
     const {
       name: fileName
@@ -357,7 +374,8 @@ const actions = {
 
     commit('addTexture', {
       name,
-      info
+      info,
+      formula
     })
   },
   // 编辑

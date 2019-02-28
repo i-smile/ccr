@@ -74,10 +74,17 @@
             <label for="infoInput" class="active">Infomations</label>
           </div>
         </div>
+        <div class="row">
+          <div class="input-field col s12">
+            <i class="material-icons prefix">palette</i>
+            <input type="text" v-model="newItem.formula" id="formulaInput" class="materialize-textarea">
+            <label for="formulaInput" :class="{'active': newItem.formula}">Formula</label>
+          </div>
+        </div>
       </div>
       <div class="modal-footer">
-        <a href="#!" class="waves-effect light-blue lighten-4 btn-small btn-flat" @click="commit">提交</a>
-        <a href="#!" class="modal-close waves-effect grey lighten-2 btn-small btn-flat">取消</a>
+        <a href="javascript:;" class="waves-effect light-blue lighten-4 btn-small btn-flat" @click="commit">提交</a>
+        <a href="javascript:;" class="modal-close waves-effect grey lighten-2 btn-small btn-flat">取消</a>
       </div>
     </div>
   </div>
@@ -103,7 +110,8 @@ export default {
         bgUrl: '',
         sampleUrl: '',
         name: '',
-        info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C'
+        info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C',
+        formula: ''
       },
       myAddModal: null
     }
@@ -202,7 +210,7 @@ export default {
         this.myAddModal.close()
       }
     },
-    editItem ({ name, info }) {
+    editItem ({ name, info, formula }) {
       this.currentAction = 'edit'
       const bgPath = path.join(userDir, `/material/clay/${name}/${name}.jpg`)
       const samplePath = path.join(userDir, `/material/clay/${name}/00.jpg`)
@@ -212,7 +220,8 @@ export default {
         bgUrl: 'file://' + bgPath,
         sampleUrl: 'file://' + samplePath,
         name,
-        info
+        info,
+        formula
       }
       this.myAddModal.open()
     },
@@ -224,7 +233,8 @@ export default {
         bgUrl: '',
         sampleUrl: '',
         name: '',
-        info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C'
+        info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C',
+        formula: ''
       }
       this.myAddModal.open()
     },
@@ -393,6 +403,7 @@ export default {
       display: inline-block;
       text-align: center;
       width: 160px;
+      cursor: pointer;
       .add-placeholder {
         width: 100%;
         height: 160px;
@@ -409,6 +420,10 @@ export default {
   .modal-close.btn-small {
     color: #555;
   }
+}
+.modal.modal-fixed-footer {
+  height: 80%;
+  max-height: 80%;
 }
 
 .logo {

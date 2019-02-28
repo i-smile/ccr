@@ -31,7 +31,7 @@
           <div class="swiper-slide" v-for="item in textureLib" :key="item.name">
             <img class="item-bg" :src="item.name | toTextureBgUrl">
             <img class="item-sample" :src="item.name | toTextureSampleUrl">
-            <div class="dot-tiny"></div>
+            <div class="dot-tiny" @click.stop="showFormula(item)"></div>
             <div class="item-info">
               <h4>Ceramics Lib&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;C/L</h4>
               <p>001-{{item.name}}</p>
@@ -44,6 +44,16 @@
     </div>
     <div class="logo" @click="navBack">
       <img src="../assets/logo.png">
+    </div>
+
+    <div id="formulaModal" class="modal">
+      <div class="modal-content">
+        <h5>配方详情 - {{formulaItem.name}}</h5>
+        <div class="detail">{{ formulaItem.formula || '该素材没有添加配方数据！' }}</div>
+      </div>
+      <div class="modal-footer">
+        <a href="javascript:;" class="modal-close waves-effect waves-green btn-flat">关闭</a>
+      </div>
     </div>
   </div>
 </template>
@@ -62,7 +72,9 @@ export default {
     return {
       isReady: false,
       swiper: null,
-      swiperInitIndex: 1
+      swiperInitIndex: 1,
+      formulaModal: null,
+      formulaItem: {}
     }
   },
   components: { Render },
@@ -76,6 +88,13 @@ export default {
     }
     this.clearShotPics()
     this.initSwiper()
+
+    this.$nextTick(() => {
+      M.AutoInit() // 初始化 materialize
+      this.formulaModal = M.Modal.getInstance(
+        document.getElementById('formulaModal')
+      )
+    })
   },
   computed: {
     ...mapState({
@@ -116,6 +135,10 @@ export default {
         console.log('onchange', index)
         this.setCurrentTexture(this.textureLib[this.swiper.activeIndex].name)
       })
+    },
+    showFormula (item) {
+      this.formulaItem = item
+      this.formulaModal.open()
     },
     picShot () {
       const pic = convertToPNG('threeCanvas')
@@ -221,6 +244,9 @@ export default {
         border-radius: 2vw 2vw;
         transform: translate(-50%, 0);
         background-color: #fff;
+        &:hover {
+          background-color: #555;
+        }
       }
       .item-info {
         text-align: left;
@@ -299,6 +325,22 @@ export default {
   cursor: pointer;
   img {
     width: 100%;
+  }
+}
+
+.modal {
+  .modal-content {
+    padding: 18px;
+    h5 {
+      font-size: 16px;
+      margin: 0 0 10px;
+    }
+    .detail {
+      padding: 20px 10px;
+      font-size: 14px;
+      background-color: #f4f4f4;
+      border-radius: 4px;
+    }
   }
 }
 </style>
