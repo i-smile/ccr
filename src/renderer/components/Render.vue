@@ -196,29 +196,19 @@ export default {
           metalness: 0.04,
           envMap: glaze.name ? this.reflectionCube : null
         })
+        // 纹理
+        if (texture.name) {
+          const textureFilePath = 'file://' + path.join(userDir, `/material/texture/${texture.name}/${texture.name}.jpg`)
+          const bumpMap = textureLoader.load(textureFilePath)
+          bumpMap.wrapS = bumpMap.wrapT = THREE.MirroredRepeatWrapping
+          bumpMap.anisotropy = 12
+          bumpMap.repeat = new THREE.Vector2(8, 8)
+
+          this.material1.bumpMap = bumpMap
+          this.material1.bumpScale = 0.8
+        }
       } else {
         this.material1 = null
-      }
-
-      // 纹理
-      if (texture.name) {
-        const textureFilePath = 'file://' + path.join(userDir, `/material/texture/${texture.name}/${texture.name}.jpg`)
-        const map3 = textureLoader.load(textureFilePath)
-        map3.wrapS = map3.wrapT = THREE.MirroredRepeatWrapping
-        map3.anisotropy = 12
-        map3.repeat = new THREE.Vector2(8, 8)
-
-        this.material3 = new THREE.MeshPhongMaterial({
-          map: map3,
-          side: THREE.DoubleSide,
-          transparent: true,
-          opacity: 0.5,
-          // reflectivity: 0.7,
-          shininess: 8 // 高亮的程度,
-          // envMap: this.reflectionCube
-        })
-      } else {
-        this.material3 = null
       }
 
       // 釉料
@@ -250,13 +240,10 @@ export default {
 
       let mergedMaterials = []
       if (!this.material1 && !this.material2) {
-        // console.log('ddddddd')
         mergedMaterials = [this.material0]
       } else {
-        // console.log('cccccccc')
         mergedMaterials = _.compact([
           this.material1,
-          this.material3,
           this.material2
         ])
       }
