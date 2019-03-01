@@ -30,8 +30,9 @@ import { ipcRenderer } from 'electron'
 import { mapState, mapActions } from 'vuex'
 import Render from '@/components/Render'
 import { userDir } from '@/const'
-import bgImgUrl from '@/assets/print-bg.png'
+import bgImgUrl from '@/assets/print-bg.jpg'
 import { saveAsJPEG } from 'canvas2image-es6'
+import { setTimeout } from 'timers'
 
 export default {
   data () {
@@ -65,13 +66,15 @@ export default {
       function draw () {
         loadCount++
         if (loadCount === 2) {
-          ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
-          ctx.drawImage(bgImg, 0, 0, that.canvasWidth, that.canvasHeight)
-          // ctx.fillRect(0, 0, that.canvasWidth, that.canvasHeight);
-          ctx.drawImage(threeImg, 160, 320, that.canvasWidth - 336, that.canvasHeight - 510)
-          ctx.fillStyle = '#a37150'
-          ctx.font = '50px Arial'
-          ctx.rotate(90 * Math.PI / 180)
+          setTimeout(() => {
+            ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
+            ctx.drawImage(bgImg, 0, 0, that.canvasWidth, that.canvasHeight)
+            // ctx.fillRect(0, 0, that.canvasWidth, that.canvasHeight);
+            ctx.drawImage(threeImg, 160, 320, that.canvasWidth - 336, that.canvasHeight - 510)
+            ctx.fillStyle = '#a37150'
+            ctx.font = '50px Arial'
+            ctx.rotate(90 * Math.PI / 180)
+          }, 200)
         }
       }
     })
