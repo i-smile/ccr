@@ -11,7 +11,8 @@
     <ul class="list">
       <li v-for="(item, index) in shotPics" :key="index">
         <canvas :id="'canvas' + index" :width="canvasWidth" :height="canvasHeight"></canvas>
-        <div class="dot" @click="print(index)"></div>
+        <div class="dot dot-print" @click="print(index)"></div>
+        <div class="dot dot-save" @click="save(index)"></div>
       </li>
     </ul>
 
@@ -30,6 +31,8 @@ import { mapState, mapActions } from 'vuex'
 import Render from '@/components/Render'
 import { userDir } from '@/const'
 import bgImgUrl from '@/assets/print-bg.png'
+import { saveAsJPEG } from 'canvas2image-es6'
+import { setTimeout } from 'timers'
 
 export default {
   data () {
@@ -57,14 +60,16 @@ export default {
       bgImg.src = bgImgUrl
 
       threeImg.onload = () => {
-        ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
-        ctx.drawImage(bgImg, 0, 0, this.canvasWidth, this.canvasHeight)
-        // ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-        ctx.drawImage(threeImg, 160, 320, this.canvasWidth - 336, this.canvasHeight - 510)
-        ctx.fillStyle = '#a37150'
-        ctx.font = '50px Arial'
-        ctx.rotate(90 * Math.PI / 180)
-        // ctx.fillText(dateText, 480, -890);
+        setTimeout(() => {
+          ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
+          ctx.drawImage(bgImg, 0, 0, this.canvasWidth, this.canvasHeight)
+          // ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
+          ctx.drawImage(threeImg, 160, 320, this.canvasWidth - 336, this.canvasHeight - 510)
+          ctx.fillStyle = '#a37150'
+          ctx.font = '50px Arial'
+          ctx.rotate(90 * Math.PI / 180)
+          // ctx.fillText(dateText, 480, -890);
+        }, 100)
       }
 
       threeImg.src = this.shotPics[index]
@@ -92,9 +97,12 @@ export default {
       fs.writeFile(`${userDir}/printPicture${index + 1}.png`, dataBuffer, function (err) {
         if (err) return
         console.log('图片保存成功')
-        // ipcRenderer.send('print-silent', `file://${userDir}/printPicture${index + 1}.png`);
-        ipcRenderer.send('print-preview', `file://${userDir}/printPicture${index + 1}.png`)
+        ipcRenderer.send('print-silent', `file://${userDir}/printPicture${index + 1}.png`)
+        // ipcRenderer.send('print-preview', `file://${userDir}/printPicture${index + 1}.png`)
       })
+    },
+    save (index) {
+      saveAsJPEG(this.canvasList[index], undefined, undefined, `picture${index + 1}.jpg`)
     }
   }
 }
