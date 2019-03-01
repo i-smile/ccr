@@ -28,9 +28,8 @@ import fs from 'fs'
 import { ipcRenderer } from 'electron'
 import { mapState, mapActions } from 'vuex'
 import Render from '@/components/Render'
-import { setTimeout } from 'timers'
 import { userDir } from '@/const'
-import bgImgUrl from '@/assets/print-bg.jpg'
+import bgImgUrl from '@/assets/print-bg.png'
 
 export default {
   data () {
@@ -56,9 +55,8 @@ export default {
       const bgImg = new Image()
       const threeImg = new Image()
       bgImg.src = bgImgUrl
-      threeImg.src = this.shotPics[index]
 
-      setTimeout(() => {
+      threeImg.onload = () => {
         ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
         ctx.drawImage(bgImg, 0, 0, this.canvasWidth, this.canvasHeight)
         // ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
@@ -67,7 +65,9 @@ export default {
         ctx.font = '50px Arial'
         ctx.rotate(90 * Math.PI / 180)
         // ctx.fillText(dateText, 480, -890);
-      }, 1000)
+      }
+
+      threeImg.src = this.shotPics[index]
     })
   },
   methods: {
