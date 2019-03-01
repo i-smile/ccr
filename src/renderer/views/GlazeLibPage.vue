@@ -74,11 +74,41 @@
             <label for="infoInput" class="active">Infomations</label>
           </div>
         </div>
-        <div class="row">
-          <div class="input-field col s12">
-            <i class="material-icons prefix">palette</i>
-            <input type="text" v-model="newItem.formula" id="formulaInput" class="materialize-textarea">
-            <label for="formulaInput" :class="{'active': newItem.formula}">Formula</label>
+        <!-- 有密码，需要输入密码 -->
+        <div v-if="newItem.hasPassword && newItem.inputPassword !== newItem.password">
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">lock</i>
+              <input type="password" v-model="newItem.inputPassword" id="passwdInput1" class="materialize-textarea">
+              <label for="passwdInput1">输入密码可查看/编辑配方</label>
+            </div>
+          </div>
+        </div>
+        <!-- 有密码，且已经输入了正确的密码，可以查看配方、编辑配方、修改密码 -->
+        <div v-else-if="newItem.hasPassword && newItem.inputPassword === newItem.password">
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">palette</i>
+              <input type="text" v-model="newItem.formula" id="formulaInput" class="materialize-textarea">
+              <label for="formulaInput" :class="{'active': newItem.formula}">Formula</label>
+            </div>
+          </div>
+        </div>
+        <!-- 没有密码 -->
+        <div v-else>
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">lock</i>
+              <input type="password" :disabled="newItem.hasPassword" v-model="newItem.password" id="passwdInput" class="materialize-textarea">
+              <label for="passwdInput" :class="{'active': newItem.password}">Formula Password</label>
+            </div>
+          </div>
+          <div class="row">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">palette</i>
+              <input type="text" v-model="newItem.formula" id="formulaInput" class="materialize-textarea">
+              <label for="formulaInput" :class="{'active': newItem.formula}">Formula</label>
+            </div>
           </div>
         </div>
       </div>
@@ -111,7 +141,10 @@ export default {
         sampleUrl: '',
         name: '',
         info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C',
-        formula: ''
+        formula: '',
+        password: '',
+        hasPassword: false,
+        inputPassword: ''
       },
       myAddModal: null
     }
@@ -192,6 +225,8 @@ export default {
         dialog.showErrorBox('错误提示', '名字不能为空')
       } else if (!this.newItem.info) {
         dialog.showErrorBox('错误提示', '描述信息不能为空')
+      } else if (this.newItem.password && !/^.{6}$/.test(this.newItem.password)) {
+        dialog.showErrorBox('错误提示', '密码必须为6位')
       } else {
         const indexInLib = _.findIndex(this.glazeLib, {
           name: this.newItem.name
@@ -212,10 +247,13 @@ export default {
         this.myAddModal.close()
       }
     },
-    editItem ({ name, info, formula }) {
+    editItem ({ name, info, formula, password = '', inputPassword = '' }) {
       this.currentAction = 'edit'
       const bgPath = path.join(userDir, `/material/glaze/${name}/${name}.jpg`)
       const samplePath = path.join(userDir, `/material/glaze/${name}/00.jpg`)
+
+      const hasPassword = !!password
+
       this.newItem = {
         bgPath,
         samplePath,
@@ -223,7 +261,10 @@ export default {
         sampleUrl: 'file://' + samplePath,
         name,
         info,
-        formula
+        formula,
+        password,
+        hasPassword,
+        inputPassword
       }
       this.myAddModal.open()
     },
@@ -236,7 +277,10 @@ export default {
         sampleUrl: '',
         name: '',
         info: 'Porcelain, Oxidation Firng, Cone 6, 1220°C',
-        formula: ''
+        formula: '',
+        password: '',
+        hasPassword: false,
+        inputPassword: ''
       }
       this.myAddModal.open()
     },
@@ -424,8 +468,9 @@ export default {
   }
 }
 .modal.modal-fixed-footer {
-  height: 80%;
-  max-height: 80%;
+  top: 5% !important;
+  height: 90%;
+  max-height: 90%;
 }
 
 .logo {

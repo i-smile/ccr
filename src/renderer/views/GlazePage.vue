@@ -54,7 +54,19 @@
     <div id="formulaModal" class="modal">
       <div class="modal-content">
         <h5>配方详情 - {{formulaItem.name}}</h5>
-        <div class="detail">{{ formulaItem.formula || '该素材没有添加配方数据！' }}</div>
+        <div class="detail" v-if="formulaItem.formula">
+          <div class="row" v-if="formulaItem.password && formulaItem.password !== formulaItem.inputPassword">
+            <div class="input-field col s12">
+              <i class="material-icons prefix">lock</i>
+              <input type="password" v-model="formulaItem.inputPassword" id="passwdInput1" class="materialize-textarea">
+              <label for="passwdInput1">输入密码可查看/编辑配方</label>
+            </div>
+          </div>
+          <div v-else>{{formulaItem.formula}}</div>
+        </div>
+        <div class="detail" v-else>
+          该素材没有添加配方数据！
+        </div>
       </div>
       <div class="modal-footer">
         <a href="javascript:;" class="modal-close waves-effect waves-green btn-flat">关闭</a>
@@ -142,7 +154,7 @@ export default {
       })
     },
     showFormula (item) {
-      this.formulaItem = item
+      this.formulaItem = _.clone(item)
       this.formulaModal.open()
     },
     picShot () {
