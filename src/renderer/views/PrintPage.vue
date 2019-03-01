@@ -32,7 +32,6 @@ import Render from '@/components/Render'
 import { userDir } from '@/const'
 import bgImgUrl from '@/assets/print-bg.png'
 import { saveAsJPEG } from 'canvas2image-es6'
-import { setTimeout } from 'timers'
 
 export default {
   data () {
@@ -49,30 +48,32 @@ export default {
     })
   },
   mounted () {
+    const that = this
     this.canvasList = document.getElementsByTagName('canvas');
 
     [0, 1, 2].forEach(index => {
-      const canvas = this.canvasList[index]
+      let loadCount = 0
+      const canvas = that.canvasList[index]
       const ctx = canvas.getContext('2d')
 
       const bgImg = new Image()
       const threeImg = new Image()
+      threeImg.onload = bgImg.onload = draw
       bgImg.src = bgImgUrl
+      threeImg.src = that.shotPics[index]
 
-      threeImg.onload = () => {
-        setTimeout(() => {
+      function draw () {
+        loadCount++
+        if (loadCount === 2) {
           ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
-          ctx.drawImage(bgImg, 0, 0, this.canvasWidth, this.canvasHeight)
-          // ctx.fillRect(0, 0, this.canvasWidth, this.canvasHeight);
-          ctx.drawImage(threeImg, 160, 320, this.canvasWidth - 336, this.canvasHeight - 510)
+          ctx.drawImage(bgImg, 0, 0, that.canvasWidth, that.canvasHeight)
+          // ctx.fillRect(0, 0, that.canvasWidth, that.canvasHeight);
+          ctx.drawImage(threeImg, 160, 320, that.canvasWidth - 336, that.canvasHeight - 510)
           ctx.fillStyle = '#a37150'
           ctx.font = '50px Arial'
           ctx.rotate(90 * Math.PI / 180)
-          // ctx.fillText(dateText, 480, -890);
-        }, 100)
+        }
       }
-
-      threeImg.src = this.shotPics[index]
     })
   },
   methods: {
@@ -97,8 +98,8 @@ export default {
       fs.writeFile(`${userDir}/printPicture${index + 1}.png`, dataBuffer, function (err) {
         if (err) return
         console.log('图片保存成功')
-        ipcRenderer.send('print-silent', `file://${userDir}/printPicture${index + 1}.png`)
-        // ipcRenderer.send('print-preview', `file://${userDir}/printPicture${index + 1}.png`)
+        // ipcRenderer.send('print-silent', `file://${userDir}/printPicture${index + 1}.png`)
+        ipcRenderer.send('print-preview', `file://${userDir}/printPicture${index + 1}.png`)
       })
     },
     save (index) {
@@ -168,6 +169,9 @@ export default {
       border-radius: 16px;
       background-color: #72627c;
       cursor: pointer;
+    }
+    .dot-save {
+      background-color: #82927c;
     }
   }
 }
