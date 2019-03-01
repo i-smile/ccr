@@ -116,8 +116,8 @@ export default {
     },
     // 不停的刷新渲染
     animate () {
-      requestAnimationFrame(this.animate)
-      this.render()
+      this.renderer && requestAnimationFrame(this.animate)
+      this.renderer && this.render()
     },
 
     init () {
@@ -218,8 +218,8 @@ export default {
           map: map1,
           side: THREE.DoubleSide,
           roughness: glaze.name ? 0.2 : 0.85,
-          // metalness: 0.02,
-          // envMap: glaze.name ? this.reflectionCube : null,
+          metalness: 0.02,
+          envMap: glaze.name ? this.reflectionCube : null,
           bumpMap: this.bumpMap,
           bumpScale: 0.8
         })
@@ -317,9 +317,9 @@ export default {
     onWindowResize () {
       const renderDom = document.getElementById('render')
       if (renderDom) {
-        this.camera.aspect = renderDom.offsetWidth / renderDom.offsetHeight
-        this.camera.updateProjectionMatrix()
-        this.renderer.setSize(renderDom.offsetWidth, renderDom.offsetHeight)
+        this.camera && (this.camera.aspect = renderDom.offsetWidth / renderDom.offsetHeight)
+        this.camera && (this.camera.updateProjectionMatrix())
+        this.renderer && (this.renderer.setSize(renderDom.offsetWidth, renderDom.offsetHeight))
       }
     }
   }
