@@ -8,7 +8,7 @@
           ●&nbsp;&nbsp;&nbsp;Clay 001-{{clay.name}}
         </span>
         <span v-if="texture.name">
-          &nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;&nbsp;Glaze 001-{{texture.name}}
+          &nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;&nbsp;Texture 001-{{texture.name}}
         </span>
         <span v-if="glaze.name">
           &nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;&nbsp;Glaze 001-{{glaze.name}}

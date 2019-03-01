@@ -26,6 +26,7 @@ export default {
       material0: null,
       material1: null,
       material2: null,
+      bumpMap: null,
       scene: null,
       camera: null,
       renderer: null
@@ -46,6 +47,20 @@ export default {
       return
     }
     this.startup()
+  },
+
+  beforeDestroy () {
+    console.log('dddd')
+    this.object = null
+    this.objGroup = undefined
+    this.box3 = null
+    this.material0 = null
+    this.material1 = null
+    this.material2 = null
+    this.bumpMap = null
+    this.scene = null
+    this.camera = null
+    this.renderer = null
   },
 
   watch: {
@@ -96,8 +111,8 @@ export default {
 
     // 渲染
     render () {
-      this.camera.lookAt(this.scene.position)
-      this.renderer.render(this.scene, this.camera)
+      this.camera && this.camera.lookAt(this.scene.position)
+      this.renderer && this.renderer.render(this.scene, this.camera)
     },
     // 不停的刷新渲染
     animate () {
@@ -149,7 +164,7 @@ export default {
       this.scene.add(ambientLight)
       this.scene.background = new THREE.Color(0xffffff)
 
-      const pointLight = new THREE.PointLight(0xffffff, 0.8)
+      const pointLight = new THREE.PointLight(0xffffff, 0.9)
       this.camera.add(pointLight)
       this.scene.add(this.camera)
       // this.scene.add(new THREE.CameraHelper(this.camera))
@@ -181,6 +196,16 @@ export default {
         side: THREE.DoubleSide
       })
 
+      // 纹理
+      if (texture.name) {
+        const textureFilePath = 'file://' + path.join(userDir, `/material/texture/${texture.name}/${texture.name}.jpg`)
+        this.bumpMap = textureLoader.load(textureFilePath)
+        this.bumpMap.wrapS = this.bumpMap.wrapT = THREE.MirroredRepeatWrapping
+        this.bumpMap.repeat = new THREE.Vector2(8, 8)
+      } else {
+        this.bumpMap = null
+      }
+
       // 泥料
       if (clay.name) {
         const clayFilePath = 'file://' + path.join(userDir, `/material/clay/${clay.name}/${clay.name}.jpg`)
@@ -193,20 +218,11 @@ export default {
           map: map1,
           side: THREE.DoubleSide,
           roughness: glaze.name ? 0.2 : 0.85,
-          metalness: 0.04,
-          envMap: glaze.name ? this.reflectionCube : null
+          // metalness: 0.02,
+          // envMap: glaze.name ? this.reflectionCube : null,
+          bumpMap: this.bumpMap,
+          bumpScale: 0.8
         })
-        // 纹理
-        if (texture.name) {
-          const textureFilePath = 'file://' + path.join(userDir, `/material/texture/${texture.name}/${texture.name}.jpg`)
-          const bumpMap = textureLoader.load(textureFilePath)
-          bumpMap.wrapS = bumpMap.wrapT = THREE.MirroredRepeatWrapping
-          bumpMap.anisotropy = 12
-          bumpMap.repeat = new THREE.Vector2(8, 8)
-
-          this.material1.bumpMap = bumpMap
-          this.material1.bumpScale = 0.8
-        }
       } else {
         this.material1 = null
       }
@@ -228,6 +244,8 @@ export default {
           shininess: 256, // 高亮的程度,
           envMap: this.reflectionCube
         })
+      } else {
+        this.material2 = null
       }
     },
 

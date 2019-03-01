@@ -9,7 +9,7 @@
           ●&nbsp;&nbsp;&nbsp;Clay 001-{{clay.name}}
         </span>
         <span v-if="texture.name">
-          &nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;&nbsp;Glaze 001-{{texture.name}}
+          &nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;&nbsp;Texture 001-{{texture.name}}
         </span>
         <span v-if="glaze.name">
           &nbsp;&nbsp;&nbsp;●&nbsp;&nbsp;&nbsp;Glaze 001-{{glaze.name}}
@@ -131,8 +131,8 @@ export default {
         slideToClickedSlide: true,
         grabCursor: true
       })
-      this.swiper.on('slideChange', index => {
-        console.log('onchange', index)
+      this.swiper.on('slideChange', () => {
+        console.log('onchange', this.swiper.activeIndex)
         this.setCurrentTexture(this.textureLib[this.swiper.activeIndex].name)
       })
     },
