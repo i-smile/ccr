@@ -9,7 +9,7 @@
     </div>
 
     <ul class="list">
-      <li v-for="(item, index) in shotPics" :key="index">
+      <li v-for="index in [0, 1, 2]" :key="index">
         <canvas :id="'canvas' + index" :width="canvasWidth" :height="canvasHeight"></canvas>
         <div class="dot dot-print" @click="print(index)"></div>
         <div class="dot dot-save" @click="save(index)"></div>
@@ -24,7 +24,7 @@
 
 <script>
 import fs from 'fs'
-// import path from 'path';
+import path from 'path'
 // import { mapState } from 'vuex';
 import { ipcRenderer } from 'electron'
 import { mapState, mapActions } from 'vuex'
@@ -32,7 +32,6 @@ import Render from '@/components/Render'
 import { userDir } from '@/const'
 import bgImgUrl from '@/assets/print-bg.jpg'
 import { saveAsJPEG } from 'canvas2image-es6'
-import { setTimeout } from 'timers'
 
 export default {
   data () {
@@ -45,7 +44,7 @@ export default {
   components: { Render },
   computed: {
     ...mapState({
-      shotPics: state => state.Main.shotPics
+      // shotPics: state => state.Main.shotPics
     })
   },
   mounted () {
@@ -53,30 +52,19 @@ export default {
     this.canvasList = document.getElementsByTagName('canvas');
 
     [0, 1, 2].forEach(index => {
-      let loadCount = 0
       const canvas = that.canvasList[index]
       const ctx = canvas.getContext('2d')
 
       const bgImg = new Image()
       const threeImg = new Image()
-      threeImg.onload = bgImg.onload = draw
-      bgImg.src = bgImgUrl
-      threeImg.src = that.shotPics[index]
-
-      function draw () {
-        loadCount++
-        if (loadCount === 2) {
-          setTimeout(() => {
-            ctx.fillStyle = 'rgba(192, 80, 77, 0.7)'
-            ctx.drawImage(bgImg, 0, 0, that.canvasWidth, that.canvasHeight)
-            // ctx.fillRect(0, 0, that.canvasWidth, that.canvasHeight);
-            ctx.drawImage(threeImg, 160, 320, that.canvasWidth - 336, that.canvasHeight - 510)
-            ctx.fillStyle = '#a37150'
-            ctx.font = '50px Arial'
-            ctx.rotate(90 * Math.PI / 180)
-          }, 200)
-        }
+      bgImg.onload = () => {
+        ctx.drawImage(bgImg, 0, 0, that.canvasWidth, that.canvasHeight)
+        threeImg.src = path.join(`file://`, `${userDir}/shotPicture${index + 1}.png`)
       }
+      threeImg.onload = () => {
+        ctx.drawImage(threeImg, 160, 320, that.canvasWidth - 336, that.canvasHeight - 510)
+      }
+      bgImg.src = bgImgUrl
     })
   },
   methods: {
@@ -102,7 +90,7 @@ export default {
         if (err) return
         console.log('图片保存成功')
         // ipcRenderer.send('print-silent', `file://${userDir}/printPicture${index + 1}.png`)
-        ipcRenderer.send('print-preview', `file://${userDir}/printPicture${index + 1}.png`)
+        ipcRenderer.send('print-preview', path.join('file://', `${userDir}/printPicture${index + 1}.png`))
       })
     },
     save (index) {

@@ -22,7 +22,7 @@
         <render></render>
         <div class="shot" @click="picShot">
           <span class="dot-shot"></span>
-          <span>0{{shotPics.length === 3 ? 3 : shotPics.length + 1}}</span>
+          <span>0{{shotPicCount === 3 ? 3 : shotPicCount + 1}}</span>
         </div>
       </div>
 
@@ -76,6 +76,7 @@
 </template>
 
 <script>
+import fs from 'fs'
 import { mapState, mapActions } from 'vuex'
 import 'swiper/dist/css/swiper.min.css'
 import Swiper from 'swiper'
@@ -83,6 +84,7 @@ import _ from 'lodash'
 import { convertToPNG } from 'canvas2image-es6'
 import Render from '@/components/Render'
 import { setTimeout } from 'timers'
+import { userDir } from '@/const'
 
 export default {
   data () {
@@ -91,7 +93,8 @@ export default {
       swiper: null,
       swiperInitIndex: 1,
       formulaModal: null,
-      formulaItem: {}
+      formulaItem: {},
+      shotPicCount: 0
     }
   },
   components: { Render },
@@ -158,11 +161,20 @@ export default {
       this.formulaModal.open()
     },
     picShot () {
+      if (this.shotPicCount === 3) return
       const pic = convertToPNG('threeCanvas')
-      this.saveShotPic(pic.src)
-      if (this.shotPics.length === 2) {
-        setTimeout(this.navToPrintPage, 150)
-      }
+
+      let imgData = pic.src
+      const base64Data = imgData.replace(/^data:image\/\w+;base64,/, '')
+      const dataBuffer = Buffer.from(base64Data, 'base64')
+      fs.writeFile(`${userDir}/shotPicture${this.shotPicCount + 1}.png`, dataBuffer, (err) => {
+        if (err) return
+        console.log('图片保存成功')
+        this.shotPicCount++
+        if (this.shotPicCount === 3) {
+          setTimeout(this.navToPrintPage, 500)
+        }
+      })
     }
   }
 }
