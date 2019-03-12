@@ -7,7 +7,8 @@
 <script>
 // import path from 'path';
 import * as THREE from 'three'
-import OrbitControls from 'three-dlc/src/controls/OrbitControls'
+// import OrbitControls from 'three-dlc/src/controls/OrbitControls'
+import TrackballControls from 'three-dlc/src/controls/TrackballControls'
 import WEBGL from 'three-dlc/src/WebGL'
 import OBJLoader from 'three-dlc/src/loaders/OBJLoader'
 import SceneUtils from 'three-dlc/src/utils/SceneUtils'
@@ -29,7 +30,8 @@ export default {
       bumpMap: null,
       scene: null,
       camera: null,
-      renderer: null
+      renderer: null,
+      cameraControls: null
     }
   },
   computed: {
@@ -61,6 +63,7 @@ export default {
     this.scene = null
     this.camera = null
     this.renderer = null
+    this.cameraControls = null
   },
 
   watch: {
@@ -113,6 +116,7 @@ export default {
     render () {
       this.camera && this.camera.lookAt(this.scene.position)
       this.renderer && this.renderer.render(this.scene, this.camera)
+      this.cameraControls && this.cameraControls.update()
     },
     // 不停的刷新渲染
     animate () {
@@ -170,11 +174,20 @@ export default {
       // this.scene.add(new THREE.CameraHelper(this.camera))
 
       // CONTROLS
-      const cameraControls = new OrbitControls(
+      this.cameraControls = new TrackballControls(
         this.camera,
         this.renderer.domElement
       )
-      cameraControls.addEventListener('change', this.render)
+      this.cameraControls.enabled = true
+      this.cameraControls.target = new THREE.Vector3()
+      this.cameraControls.rotateSpeed = 3.0 // 控制相机旋转速度
+      this.cameraControls.zoomSpeed = 1.2 // 控制相机缩放速度
+      this.cameraControls.panSpeed = 0.3 // 控制相机移动速度
+      this.cameraControls.noRotate = false // 关闭相机旋转 默认false
+      this.cameraControls.noZoom = false // 关闭相机缩放 默认false
+      this.cameraControls.noPan = false // 关闭相机移动 默认false
+      this.cameraControls.staticMoving = false // 关闭惯性拖拽 默认值false
+      this.cameraControls.dynamicDampingFactor = 0.2 // 设置惯性拖拽的阻力 默认值是0.2
 
       window.addEventListener('resize', this.onWindowResize, false)
     },
